@@ -1,0 +1,12 @@
+check_method_arguments_called_not_allowed: 'Method arguments are fetched in method "%method%" using "%called%" this is not allowed'
+check_method_arguments_not_allowed: 'Method "%method%" has arguments'
+
+check_class_should_be_final: 'Class "%class%" should be marked as final'
+
+check_psr4_no_namespace_declaration: 'No namespace declaration found'
+check_psr4_multiple_namespace_declarations: 'Found multiple namespace declarations. The file should be split'
+check_psr4_namespace_must_have_vendor_namespace: 'Namespace has no vendor prefix'
+
+check_psr4_must_have_a_class: 'No class found'
+check_psr4_multiple_classes: 'Found multiple classes. The file should be split'
+check_psr4_filename_must_match_classname: 'Invalid class "%class%" found in file expected class "%expected%"'

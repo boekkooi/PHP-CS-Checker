@@ -1,0 +1,28 @@
+{
+  "name": "boekkooi/php-cs-fixer-checker",
+  "description": "A extension for the Broadway package with extra's like tactician usage and other tweaks",
+  "license" : [ "MIT" ],
+  "authors": [
+    {
+      "name": "Warnar Boekkooi",
+      "email": "warnar@boekkooi.net"
+    }
+  ],
+  "require": {
+    "php": ">=5.5",
+    "fabpot/php-cs-fixer": "~2.0",
+    "symfony/translation": "~2.7",
+    "symfony/yaml": "~2.7"
+  },
+  "autoload": {
+    "psr-4": {
+      "Boekkooi\\CS\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\Boekkooi\\CS\\": "tests/"
+    }
+  },
+  "minimum-stability": "dev"
+}
