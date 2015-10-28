@@ -37,7 +37,7 @@ class LineNumberIterator extends \IteratorIterator
         if ($this->valid()) {
             $token = $this->current();
             if (
-                ($token->isGivenKind(T_WHITESPACE) || $token->isGivenKind(T_OPEN_TAG)) &&
+                ($token->isGivenKind([T_WHITESPACE,T_OPEN_TAG,T_COMMENT,T_DOC_COMMENT])) &&
                 ($n = strpos($token->getContent(), "\n")) !== false
             ) {
                 $this->lineNumber += mb_substr_count($token->getContent(), "\n");
