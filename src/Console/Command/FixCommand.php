@@ -1,5 +1,4 @@
 <?php
-
 namespace Boekkooi\CS\Console\Command;
 
 use Boekkooi\CS\Config;
@@ -308,8 +307,7 @@ EOF
                 'using-cache' => $input->getOption('using-cache'),
                 'cache-file' => $input->getOption('cache-file'),
             ))
-            ->resolve()
-        ;
+            ->resolve();
 
         $config = $resolver->getConfig();
         $configFile = $resolver->getConfigFile();
@@ -343,7 +341,6 @@ EOF
             $progressOutput->printLegend();
             $this->fixer->setEventDispatcher(null);
         }
-
 
         $translator = new Translator('en');
         $translator->addResource('yml', __DIR__.'/../../Resources/translations/messages.en.yml', 'en');

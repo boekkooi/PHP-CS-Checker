@@ -58,7 +58,7 @@ final class NoMethodWithArgumentsChecker extends AbstractChecker
      */
     private function checkMethods(Tokens $tokens, $classStart, $classEnd)
     {
-        for ($index = $classStart; $index < $classEnd; $index++) {
+        for ($index = $classStart; $index < $classEnd; ++$index) {
             $token = $tokens[$index];
             if (!$token->isGivenKind(T_FUNCTION)) {
                 continue;
@@ -90,7 +90,7 @@ final class NoMethodWithArgumentsChecker extends AbstractChecker
         $startParenthesisIndex = $tokens->getNextTokenOfKind($methodFunctionIndex, array('('));
         $endParenthesisIndex = $tokens->findBlockEnd(Tokens::BLOCK_TYPE_PARENTHESIS_BRACE, $startParenthesisIndex);
 
-        for ($index = $startParenthesisIndex; $index < $endParenthesisIndex; $index++) {
+        for ($index = $startParenthesisIndex; $index < $endParenthesisIndex; ++$index) {
             if (!$tokens[$index]->isGivenKind(T_VARIABLE)) {
                 continue;
             }
@@ -109,7 +109,7 @@ final class NoMethodWithArgumentsChecker extends AbstractChecker
 
     private function checkMethodBody(Tokens $tokens, $methodName, $methodStart, $methodEnd)
     {
-        for ($index = $methodStart; $index < $methodEnd; $index++) {
+        for ($index = $methodStart; $index < $methodEnd; ++$index) {
             if (
                 !$tokens[$index]->isGivenKind(T_STRING) ||
                 !in_array($tokens[$index]->getContent(), ['func_get_args', 'func_get_arg', 'func_num_args'], true)
@@ -124,7 +124,7 @@ final class NoMethodWithArgumentsChecker extends AbstractChecker
                     'check_method_arguments_called_not_allowed',
                     [
                         'method' => $methodName,
-                        'function' => $tokens[$index]->getContent()
+                        'function' => $tokens[$index]->getContent(),
                     ]
                 )
             );

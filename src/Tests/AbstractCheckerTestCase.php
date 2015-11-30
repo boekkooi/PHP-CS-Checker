@@ -10,16 +10,17 @@ use Boekkooi\CS\Tokenizer\Tokens;
 abstract class AbstractCheckerTestCase extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Get the check that is being tested
+     * Get the check that is being tested.
      *
      * @return CheckerInterface
      */
-    protected abstract function getChecker();
+    abstract protected function getChecker();
 
     /**
-     * Get the SplFileInfo for a given filename
+     * Get the SplFileInfo for a given filename.
      *
      * @param string $filename
+     *
      * @return \SplFileInfo
      */
     protected function getTestFile($filename = __FILE__)
@@ -56,7 +57,7 @@ abstract class AbstractCheckerTestCase extends \PHPUnit_Framework_TestCase
         $iterator = new ReportedTokenIterator(new LineNumberIterator($tokens));
         $lineMessages = [];
         foreach ($iterator as $k => $messages) {
-            $lineMessages[$k] = array_map(function(Message $message) {
+            $lineMessages[$k] = array_map(function (Message $message) {
                 return $message->toArray();
             }, $messages);
         }

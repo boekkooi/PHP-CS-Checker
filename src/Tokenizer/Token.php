@@ -13,7 +13,7 @@ class Token extends BaseToken
         $extended = new self($token->getPrototype());
 
         if ($token->isChanged()) {
-            $extended->setContent('__CHANGE_HOLDER__' . $token->getContent());
+            $extended->setContent('__CHANGE_HOLDER__'.$token->getContent());
             $extended->setContent($token->getContent());
         }
 

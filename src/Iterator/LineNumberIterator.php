@@ -29,7 +29,7 @@ class LineNumberIterator extends \IteratorIterator
 
     public function key()
     {
-        return $this->valid() ? $this->lineNumber . ':' . $this->columnNumber : null;
+        return $this->valid() ? $this->lineNumber.':'.$this->columnNumber : null;
     }
 
     public function next()
@@ -37,11 +37,11 @@ class LineNumberIterator extends \IteratorIterator
         if ($this->valid()) {
             $token = $this->current();
             if (
-                ($token->isGivenKind([T_WHITESPACE,T_OPEN_TAG,T_COMMENT,T_DOC_COMMENT])) &&
+                ($token->isGivenKind([T_WHITESPACE, T_OPEN_TAG, T_COMMENT, T_DOC_COMMENT])) &&
                 ($n = strpos($token->getContent(), "\n")) !== false
             ) {
                 $this->lineNumber += mb_substr_count($token->getContent(), "\n");
-                $this->columnNumber = mb_strlen(substr($token->getContent(), $n+1));
+                $this->columnNumber = mb_strlen(substr($token->getContent(), $n + 1));
                 if ($this->columnNumber === 0) {
                     $this->columnNumber = 1;
                 }

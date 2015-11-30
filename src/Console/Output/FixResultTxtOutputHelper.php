@@ -108,10 +108,10 @@ class FixResultTxtOutputHelper
 
             $output->write('      - ');
             if (count($messages) === 1) {
-                $output->writeln(implode($messages) . sprintf(' (line %d column %d)', $line, $col));
+                $output->writeln(implode($messages).sprintf(' (line %d column %d)', $line, $col));
             } else {
                 $output->writeln(sprintf('Check failed on line %d column %d', $line, $col));
-                $output->writeln(str_repeat(' ', 8) . implode("\n" . str_repeat(' ', 8), $messages));
+                $output->writeln(str_repeat(' ', 8).implode("\n".str_repeat(' ', 8), $messages));
             }
         }
     }
@@ -120,7 +120,7 @@ class FixResultTxtOutputHelper
     {
         $parameters = [];
         foreach ($message->getParameters() as $key => $value) {
-            $parameters['%' . $key . '%'] = $value;
+            $parameters['%'.$key.'%'] = $value;
         }
 
         return $this->translator->trans($message->getId(), $parameters);

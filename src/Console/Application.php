@@ -5,7 +5,6 @@ use Boekkooi\CS\Console\Command\FixCommand;
 use Boekkooi\CS\Fixer;
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\CS\Console\Command\ReadmeCommand;
-use Symfony\CS\Console\Command\SelfUpdateCommand;
 
 class Application extends BaseApplication
 {

@@ -58,7 +58,7 @@ class Psr4Checker extends AbstractChecker
                     'check_psr4_filename_must_match_classname',
                     [
                         'expected' => $fileBasename,
-                        'class' => $className
+                        'class' => $className,
                     ]
                 )
             );
@@ -78,6 +78,7 @@ class Psr4Checker extends AbstractChecker
                     'check_psr4_no_namespace_declaration'
                 )
             );
+
             return null;
         }
 
@@ -95,7 +96,7 @@ class Psr4Checker extends AbstractChecker
                         'check_psr4_multiple_namespace_declarations',
                         [
                             'namespace' => $namespace,
-                            'additional' => $ns
+                            'additional' => $ns,
                         ]
                     )
                 );
@@ -113,7 +114,7 @@ class Psr4Checker extends AbstractChecker
             );
         }
 
-        return [ $namespace, $namespaceIndex ];
+        return [$namespace, $namespaceIndex];
     }
 
     private function resolveClassName(Tokens $tokens, $classes)
@@ -126,9 +127,9 @@ class Psr4Checker extends AbstractChecker
                     'check_psr4_must_have_a_class'
                 )
             );
+
             return null;
         }
-
 
         reset($classes);
         $classNameIndex = key($classes);
@@ -144,13 +145,13 @@ class Psr4Checker extends AbstractChecker
                         'check_psr4_multiple_classes',
                         [
                             'class' => $className,
-                            'additional' => $cls
+                            'additional' => $cls,
                         ]
                     )
                 );
             }
         }
 
-        return [ $className, $classNameIndex ];
+        return [$className, $classNameIndex];
     }
 }

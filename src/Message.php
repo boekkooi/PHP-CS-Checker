@@ -50,7 +50,7 @@ class Message
         return [
             $this->severity,
             $this->id,
-            $this->parameters
+            $this->parameters,
         ];
     }
 }

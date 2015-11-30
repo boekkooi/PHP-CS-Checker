@@ -15,7 +15,6 @@ class Tokens extends BaseTokens
         $this[$index]->report($message);
     }
 
-
     /**
      * Create token collection from array.
      *

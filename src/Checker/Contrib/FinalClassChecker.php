@@ -29,7 +29,7 @@ class FinalClassChecker extends AbstractChecker
     public function check(\SplFileInfo $file, Tokens $tokens)
     {
         $tokenCount = $tokens->count();
-        for ($index = 0; $index < $tokenCount; $index++) {
+        for ($index = 0; $index < $tokenCount; ++$index) {
             $token = $tokens[$index];
 
             if (!$token->isGivenKind(T_CLASS)) {
@@ -56,7 +56,7 @@ class FinalClassChecker extends AbstractChecker
                     E_ERROR,
                     'check_class_should_be_final',
                     [
-                        'class' => $className
+                        'class' => $className,
                     ]
                 )
             );
