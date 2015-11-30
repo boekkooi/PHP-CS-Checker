@@ -7,6 +7,18 @@ use Boekkooi\CS\Tokenizer\Tokens;
 
 class Psr4Checker extends AbstractChecker
 {
+    private $dirMap;
+    private $excludedFiles;
+
+    /**
+     * Constructor.
+     */
+    public function __construct(array $dirMap = array(), array $excludedFiles = array())
+    {
+        $this->dirMap = $dirMap;
+        $this->excludedFiles = $excludedFiles;
+    }
+
     /**
      * @inheritdoc
      */
@@ -28,6 +40,10 @@ class Psr4Checker extends AbstractChecker
      */
     public function check(\SplFileInfo $file, Tokens $tokens)
     {
+        if (in_array(preg_replace('#/+#', '/', $file->getPathname()), $this->excludedFiles, true)) {
+            return;
+        }
+
         $namespaces = [];
         $classes = [];
 
@@ -46,7 +62,8 @@ class Psr4Checker extends AbstractChecker
         list($namespace, $namespaceIndex) = $this->resolveNamespace($tokens, $namespaces);
         list($className, $classNameIndex) = $this->resolveClassName($tokens, $classes);
 
-        // TODO check namespace directory
+        // Check namespace directory
+        $this->checkNamespaceDirectory($file, $tokens, $namespace, $namespaceIndex);
 
         // File basename must match class name
         $fileBasename = $file->getBasename('.'.$file->getExtension());
@@ -153,5 +170,52 @@ class Psr4Checker extends AbstractChecker
         }
 
         return [$className, $classNameIndex];
+    }
+
+    /**
+     * @param \SplFileInfo $file
+     * @param Tokens $tokens
+     * @param $namespace
+     * @param $namespaceIndex
+     */
+    public function checkNamespaceDirectory(\SplFileInfo $file, Tokens $tokens, $namespace, $namespaceIndex)
+    {
+        if ($namespace === null) {
+            return;
+        }
+
+        $path = trim(preg_replace('#/+#', '/', $file->getPath()), '/');
+        $parts = [];
+        while (!isset($this->dirMap[$path])) {
+            $pathPos = strrpos($path, '/');
+            if ($pathPos === false) {
+                return;
+            }
+
+            $parts[] = substr($path, $pathPos + 1);
+            $path = substr($path, 0, $pathPos);
+        }
+
+        if (!isset($this->dirMap[$path])) {
+            return;
+        }
+
+        $expectedNamespace =
+            $this->dirMap[$path].
+            (empty($parts) ? '' : '\\'.implode('\\', array_reverse($parts)));
+
+        if ($expectedNamespace !== $namespace) {
+            $tokens->reportAt(
+                $namespaceIndex,
+                new Message(
+                    E_ERROR,
+                    'check_psr4_namespace_is_invalid',
+                    [
+                        'expected' => $expectedNamespace,
+                        'namespace' => $namespace,
+                    ]
+                )
+            );
+        }
     }
 }

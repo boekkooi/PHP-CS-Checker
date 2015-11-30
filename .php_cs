@@ -6,13 +6,17 @@ $finder
     ->name('*.php')
     ->ignoreDotFiles(true)
     ->ignoreVCS(true)
-    ->in([ 'src/' ]);
+    ->in([ 'src/' ])
+;
 
 // Setup fixers and checkers
-$config = \Boekkooi\CS\Config::create()
+$config = Boekkooi\CS\Config::create()
     ->finder($finder)
     ->checkers([
-        new \Boekkooi\CS\Checker\Psr4Checker()
+        new Boekkooi\CS\Checker\Psr4Checker(
+            array( 'src' => 'Boekkooi\CS' ),
+            array( 'src/Resources/phar-stub.php' )
+        )
     ])
     ->setRules([
         '@Symfony' => true,

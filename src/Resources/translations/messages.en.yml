@@ -6,6 +6,7 @@ check_class_should_be_final: 'Class "%class%" should be marked as final'
 check_psr4_no_namespace_declaration: 'No namespace declaration found'
 check_psr4_multiple_namespace_declarations: 'Found multiple namespace declarations. The file should be split'
 check_psr4_namespace_must_have_vendor_namespace: 'Namespace has no vendor prefix'
+check_psr4_namespace_is_invalid: 'Expected namespace %expected% but got %namespace%'
 
 check_psr4_must_have_a_class: 'No class found'
 check_psr4_multiple_classes: 'Found multiple classes. The file should be split'
