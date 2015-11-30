@@ -14,7 +14,8 @@ use Symfony\CS\FixerFileProcessedEvent;
 use Symfony\CS\Linter\LintingException;
 
 /**
- * This is mostly a copy of Fixed
+ * This is mostly a copy of Fixed.
+ *
  * @see \Symfony\CS\Fixer
  */
 class Fixer extends \Symfony\CS\Fixer
@@ -34,7 +35,6 @@ class Fixer extends \Symfony\CS\Fixer
     {
         $changed = array();
         $fixers = $config->getFixers();
-        $checkers = $config instanceof ConfigInterface ? $config->getCheckers() : [];
 
         $this->stopwatch->openSection();
 
@@ -44,6 +44,17 @@ class Fixer extends \Symfony\CS\Fixer
             $config->getRules()
         );
 
+        $checkers = [];
+        $messageCacheManager = null;
+        if ($config instanceof ConfigInterface) {
+            $checkers = $config->getCheckers();
+            $messageCacheManager = new FileMessageCacheManager(
+                $config->usingCache(),
+                $config->getCheckerCacheFile(),
+                array_map('get_class', $config->getCheckers())
+            );
+        }
+
         /** @var \SplFileInfo $file */
         foreach ($config->getFinder() as $file) {
             if ($file->isDir() || $file->isLink()) {
@@ -52,8 +63,13 @@ class Fixer extends \Symfony\CS\Fixer
 
             $this->stopwatch->start($this->getFileRelativePathname($file));
 
-            if ($fixInfo = $this->fixFile($file, $fixers, $dryRun, $diff, $fileCacheManager, $checkers)) {
-                $changed[$this->getFileRelativePathname($file)] = $fixInfo;
+            $relativeFile = $this->getFileRelativePathname($file);
+            if ($fixInfo = $this->fixFile($file, $fixers, $dryRun, $diff, $fileCacheManager, $checkers, $messageCacheManager)) {
+                $changed[$relativeFile] = $fixInfo;
+            } elseif ($messageCacheManager->hasMessage($this->getFileRelativePathname($file))) {
+                $changed[$relativeFile] = array(
+                    'checkMessages' => $messageCacheManager->getMessage($relativeFile),
+                );
             }
 
             $this->stopwatch->stop($this->getFileRelativePathname($file));
@@ -71,9 +87,11 @@ class Fixer extends \Symfony\CS\Fixer
      * @param bool $dryRun
      * @param bool $diff
      * @param FileCacheManager $fileCacheManager
+     * @param FileMessageCacheManager $messageCacheManager
+     *
      * @return array|null|void
      */
-    public function fixFile(\SplFileInfo $file, array $fixers, $dryRun, $diff, FileCacheManager $fileCacheManager, array $checkers = array())
+    public function fixFile(\SplFileInfo $file, array $fixers, $dryRun, $diff, FileCacheManager $fileCacheManager, array $checkers = array(), FileMessageCacheManager $messageCacheManager = null)
     {
         $new = $old = file_get_contents($file->getRealpath());
 
@@ -179,18 +197,24 @@ class Fixer extends \Symfony\CS\Fixer
 
             $fixInfo = array(
                 'appliedFixers' => $appliedFixers,
-                'checkMessages' => $checkMessages
+                'checkMessages' => $checkMessages,
             );
             if ($diff) {
                 $fixInfo['diff'] = $this->stringDiff($old, $new);
             }
         } elseif (!empty($checkMessages)) {
             $fixInfo = array(
-                'checkMessages' => $checkMessages
+                'checkMessages' => $checkMessages,
             );
         }
 
         $fileCacheManager->setFile($this->getFileRelativePathname($file), $new);
+        if ($messageCacheManager !== null) {
+            $messageCacheManager->setMessages(
+                $this->getFileRelativePathname($file),
+                isset($fixInfo['checkMessages']) ? $fixInfo['checkMessages'] : []
+            );
+        }
 
         $this->dispatchEvent(
             FixerFileProcessedEvent::NAME,
@@ -228,6 +252,7 @@ class Fixer extends \Symfony\CS\Fixer
      * @param \SplFileInfo $file
      * @param CheckerInterface[] $checkers
      * @param Tokens $tokens
+     *
      * @return array
      */
     protected function runCheckers(\SplFileInfo $file, array $checkers, Tokens $tokens)
@@ -258,6 +283,7 @@ class Fixer extends \Symfony\CS\Fixer
      * @param \SplFileInfo $file
      * @param \Symfony\CS\FixerInterface[] $fixers
      * @param Tokens $tokens
+     *
      * @return array
      */
     protected function runFixers(\SplFileInfo $file, array $fixers, $tokens)

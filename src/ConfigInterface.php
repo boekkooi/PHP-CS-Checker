@@ -9,4 +9,11 @@ interface ConfigInterface extends \Symfony\CS\ConfigInterface
      * @return CheckerInterface[]
      */
     public function getCheckers();
+
+    /**
+     * Returns the path to the checker cache file.
+     *
+     * @return string
+     */
+    public function getCheckerCacheFile();
 }
