@@ -27,7 +27,7 @@
       "Tests\\Boekkooi\\CS\\": "tests/"
     }
   },
-  "bin": ["php-cs-fixer"],
+  "bin": ["php-cs-checker"],
   "minimum-stability": "dev",
   "extra": {
     "branch-alias": {
