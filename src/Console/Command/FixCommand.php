@@ -487,14 +487,12 @@ EOF
 
         $exitStatus = 0;
 
-        if ($resolver->isDryRun()) {
-            if (!empty($invalidErrors)) {
-                $exitStatus |= self::EXIT_STATUS_FLAG_HAS_INVALID_FILES;
-            }
+        if (!empty($invalidErrors)) {
+            $exitStatus |= self::EXIT_STATUS_FLAG_HAS_INVALID_FILES;
+        }
 
-            if (!empty($changed)) {
-                $exitStatus |= self::EXIT_STATUS_FLAG_HAS_CHANGED_FILES;
-            }
+        if (!empty($changed)) {
+            $exitStatus |= self::EXIT_STATUS_FLAG_HAS_CHANGED_FILES;
         }
 
         return $exitStatus;
